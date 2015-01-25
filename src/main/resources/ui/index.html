@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Temperature History</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/typeahead.js"></script>
+    <script src="js/modernizr.js"></script>
+</head>
+
+<body>
+
+<div id="chart">
+    <svg>
+    </svg>
+</div>
+<div id="widgets">
+    <div id="header">
+        <h1>Temperature History</h1><br/>
+
+        <div id="the-basics-2" align="left">
+            <p>Explore the temperature by picking a country and scrolling the page <span class="emphasis">up</span> and
+                <span class="emphasis">down</span>.
+            </p>
+        </div>
+    </div>
+    <div id="menu">
+    </div>
+    <div id="info">
+
+    </div>
+    <div id="suggest">
+        <input class="typeahead" type="text" placeholder="Country">
+    </div>
+
+    <div id="footer">
+        <p>Chart development by <a href="http://animateddata.co.uk">Peter Cook</a>.</p>
+    </div>
+</div>
+
+<script src="js/d3.v3.min.js"></script>
+<script src="js/underscore-min.js"></script>
+<script type="text/javascript">
+    Modernizr.load({
+        test: Modernizr.svg,
+        yep: 'js/temperature.js',
+        nope: ['js/jquery.js', 'js/fallback.js']
+    });
+</script>
+<script type='text/javascript'>
+    $(window).load(function () {
+        var engine = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/weather/suggest?q=%QUERY',
+                filter: function (suggestions) {
+                    return $.map(suggestions, function (s) {
+                        return {
+                            value: s.suggestion.toLowerCase(),
+                            code: s.code
+                        };
+                    });
+                }
+            }
+        });
+
+        engine.initialize();
+
+        $('.typeahead').typeahead(null, {
+            hint: 'false',
+            source: engine.ttAdapter()
+        })
+
+                .on('typeahead:selected', onAutocompleted)
+                .on('typeahead:autocompleted', onSelected);
+    });
+
+    function onAutocompleted($e, datum) {
+        console.log('autocompleted');
+        d3.json('/weather/countrySummary?country=' + datum.code, function (temperatureData) {
+            chart.data = temperatureData;
+            chart.clean();
+            chart.init();
+            chart.updateVisibleYears();
+        });
+    }
+
+    function onSelected($e, datum) {
+        console.log('selected');
+        console.log(datum);
+    }
+
+</script>
+
+</body>
+</html>
