@@ -6,7 +6,7 @@
 
 ## Configuration
 
-```src/main/resources/config.properties```
+Refer to ```src/main/resources/config.properties```
 
 ## Execution
 
