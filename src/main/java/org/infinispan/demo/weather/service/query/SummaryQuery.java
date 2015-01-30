@@ -1,6 +1,7 @@
 package org.infinispan.demo.weather.service.query;
 
 import com.google.inject.Inject;
+import org.hibernate.search.spi.SearchIntegrator;
 import org.infinispan.demo.weather.model.DaySummary;
 import org.infinispan.demo.weather.service.rest.TemperatureSummary;
 import org.apache.lucene.index.IndexReader;
@@ -32,11 +33,12 @@ public class SummaryQuery {
         q_bool.add(q_year, BooleanClause.Occur.MUST);
 
         // Group by month and extract maxTemp from each month
-        IndexReader indexReader = Search.getSearchManager(cache).getSearchFactory().getIndexReaderAccessor().open(DaySummary.class);
+        SearchIntegrator searchFactory = Search.getSearchManager(cache).getSearchFactory();
+        IndexReader indexReader = searchFactory.getIndexReaderAccessor().open(DaySummary.class);
         IndexSearcher searcher = new IndexSearcher(indexReader);
         GroupingSearch groupingSearch = new GroupingSearch("month");
         groupingSearch.setGroupDocsLimit(365);
-        groupingSearch.setSortWithinGroup(new Sort(new SortField[]{new SortField("maxTemp", SortField.Type.FLOAT)}));
+        groupingSearch.setSortWithinGroup(new Sort(new SortField[]{new SortField("avgTemp", SortField.Type.FLOAT)}));
         groupingSearch.setGroupSort(new Sort(new SortField[]{new SortField("month", SortField.Type.INT)}));
         groupingSearch.setFillSortFields(true);
         TopGroups<Object> topGroups = groupingSearch.search(searcher, q_bool, 0, 12);

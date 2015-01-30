@@ -7,7 +7,7 @@ import org.hibernate.search.annotations.*;
 import org.infinispan.commons.marshall.SerializeWith;
 
 @Indexed
-@AnalyzerDef(name = "lowercase",
+@AnalyzerDef(name = "lowercaseKeyword",
         tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class),
         filters = {@TokenFilterDef(factory = LowerCaseFilterFactory.class)}
 )
@@ -16,7 +16,7 @@ import org.infinispan.commons.marshall.SerializeWith;
 public class Country {
 
     @Field(store = Store.YES)
-    @Analyzer(definition = "lowercase")
+    @Analyzer(definition = "lowercaseKeyword")
     private String name;
 
     @Field(store = Store.YES, analyze = Analyze.NO)

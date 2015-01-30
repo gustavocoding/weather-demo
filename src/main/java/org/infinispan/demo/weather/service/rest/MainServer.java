@@ -9,6 +9,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.infinispan.demo.weather.service.query.SampleQueries;
 import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
 import org.jboss.resteasy.plugins.guice.ext.RequestScopeModule;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
@@ -44,6 +45,8 @@ public class MainServer {
         LuceneCountrySuggester luceneCountrySuggester = injector.getInstance(LuceneCountrySuggester.class);
         cachePopulator.indexData();
         luceneCountrySuggester.buildDictionary();
+        SampleQueries queries = injector.getInstance(SampleQueries.class);
+        System.out.println("Total number of entities in the index :" + queries.countDocs());
     }
 
     private static class ServerModule extends RequestScopeModule {
