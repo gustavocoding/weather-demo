@@ -15,7 +15,6 @@ import org.infinispan.demo.weather.service.rest.Suggestion;
 import org.infinispan.query.Search;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,8 +51,8 @@ public class LuceneCountrySuggester {
 
     private static class CountryAnalyzer extends Analyzer {
         @Override
-        protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
-            KeywordTokenizer keywordTokenizer = new KeywordTokenizer(reader);
+        protected TokenStreamComponents createComponents(String fieldName) {
+            KeywordTokenizer keywordTokenizer = new KeywordTokenizer();
             LowerCaseFilter lowerCaseFilter = new LowerCaseFilter(keywordTokenizer);
             return new TokenStreamComponents(keywordTokenizer, lowerCaseFilter);
         }

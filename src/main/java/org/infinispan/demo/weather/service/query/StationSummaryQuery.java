@@ -80,7 +80,7 @@ public class StationSummaryQuery {
         GroupingSearch groupingSearch = new GroupingSearch("yearMonth");
         groupingSearch.setGroupDocsLimit(2000);
         groupingSearch.setSortWithinGroup(new Sort(new SortField("maxTemp", SortField.Type.FLOAT)));
-        groupingSearch.setGroupSort(new Sort(new SortField[]{new SortField("yearMonth", SortField.Type.INT)}));
+        groupingSearch.setGroupSort(new Sort(new SortField[]{new SortField("yearMonth", SortField.Type.STRING)}));
         groupingSearch.setFillSortFields(true);
         TopGroups<Object> topGroups = groupingSearch.search(searcher, queryByCountry, 0, 2000);
 

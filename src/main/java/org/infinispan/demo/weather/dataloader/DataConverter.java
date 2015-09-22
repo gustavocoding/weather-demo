@@ -45,7 +45,7 @@ public class DataConverter {
             _station = new org.infinispan.demo.weather.model.Station(usaf, wban, name, _country, _lat, _long);
         }
         return new org.infinispan.demo.weather.model.DaySummary(
-                _station, String.valueOf(date.m()), String.valueOf(date.y()) + String.valueOf(date.m()), avgTemp, minTemp, maxTemp);
+                _station, String.valueOf(date.m()), String.valueOf(date.y()) + String.format("%02d",date.m()), avgTemp, minTemp, maxTemp);
 
     };
 }

@@ -31,8 +31,7 @@ public class SampleQueries {
         Query luceneQuery = queryParser.parse("+station.name:airport +yearMonth:201412 +(avgTemp < 0)");
 
         CacheQuery query = Search.getSearchManager(cache).getQuery(luceneQuery, DaySummary.class);
-        List<Object> results = query.list();
-        return results;
+        return query.list();
     }
 
     public static void main(String[] args) throws ParseException {

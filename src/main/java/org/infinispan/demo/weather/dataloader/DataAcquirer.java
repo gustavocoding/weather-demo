@@ -2,7 +2,6 @@ package org.infinispan.demo.weather.dataloader;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import infinispan.com.google.common.base.Splitter;
 import noaaParser.DaySummary;
 import noaaParser.Downloader;
 import noaaParser.Extractor;
@@ -12,6 +11,8 @@ import scala.collection.parallel.mutable.ParArray;
 import javax.inject.Singleton;
 import java.util.List;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static scala.compat.java8.JFunction.func;
 
 /**
@@ -37,7 +38,7 @@ public class DataAcquirer {
     @Inject
     @Named("skipDownload")
     Boolean skipDownload;
-    
+
     @Inject
     @Named("sampleYear")
     String sampleYear;
@@ -47,7 +48,7 @@ public class DataAcquirer {
             downloader.download();
             extractor.extractAll();
         }
-        List<String> countries = Splitter.on(",").splitToList(countryCodes);
+       List<String> countries = stream(countryCodes.split(",")).collect(toList());
         return opLoader.getSummaries(func(c -> c.day().y() == Integer.valueOf(sampleYear) || c.station().exists(func(d -> d.country().exists(func(s -> countries.contains(s.code())))))));
     }
 

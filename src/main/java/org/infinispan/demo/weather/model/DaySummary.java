@@ -13,6 +13,7 @@ public class DaySummary  {
     private Station station;
 
     @Field(store = Store.YES, analyze = Analyze.NO)
+    @SortableField
     private String yearMonth;
 
     @Field(store = Store.YES, analyze = Analyze.NO)
@@ -25,6 +26,7 @@ public class DaySummary  {
     Float minTemp;
 
     @Field(store = Store.YES)
+    @SortableField
     Float maxTemp;
 
     public String getYearMonth() {
